@@ -4,12 +4,30 @@ import { ArtistaService } from './artista.service';
 import { ArtistaEntity } from './artista.entity';
 import { ArtistaCreateDto } from './artista.create-dto';
 import { ArtistaUpdateDto } from './artista.update-dto';
+import { ConciertoService } from '../Concierto/concierto.service';
 
 @Controller('artista')
 export class ArtistaController {
   constructor(
     private readonly _artistaService: ArtistaService,
+    private readonly _conciertoService: ConciertoService,
   ) {
+  }
+
+  @Get('ruta/crear-artista')
+  async rutaCrearConcierto(
+    @Res() res,
+    @Session() session,
+  ): Promise<void> {
+    const conciertos = await this._conciertoService.buscarConciertos();
+    session.usuario ? res.render('artista/ruta-crear-artista',
+      {
+        datos: {
+          tipoMensaje: 0,
+          conciertos
+        },
+      },
+    ) : res.redirect('/');
   }
 
   @Post()
@@ -22,9 +40,9 @@ export class ArtistaController {
       if (session.usuario.roles.includes('Administrador')) {
         const artistaCreateDto = new ArtistaCreateDto();
         artistaCreateDto.nombre = artista.nombre;
-        artistaCreateDto.integrantes = artista.integrantes;
+        artistaCreateDto.integrantes = +artista.integrantes;
         artistaCreateDto.nacionalidad = artista.nacionalidad;
-        artistaCreateDto.precio = artista.precio;
+        artistaCreateDto.precio = +artista.precio;
         artistaCreateDto.representante = artista.representante;
 
         const errores = await validate(artistaCreateDto);

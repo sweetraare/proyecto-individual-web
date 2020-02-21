@@ -1,0 +1,80 @@
+<%- include('../commons/cabecera') %>
+<% const estaEditando = !!datos.artista; %>
+<h1>Crear un artista</h1>
+<div class="container">
+    <% if(datos.tipoMensaje != 0){ %>
+        <div class="alert alert-<%= datos.tipoMensaje == 1 ? 'success' : 'danger' %> " role="alert">
+            <%= datos.mensaje %>
+        </div>
+    <% } %>
+    <h1><%= estaEditando ? 'Editar Artista' : 'Crear Artista' %></h1>
+    <form action=/artista<%= estaEditando ? '/' + datos.artista.id : '' %> method="POST">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="nombre">
+                        Nombre
+                    </label>
+                    <input id="nombre" type="text" name="nombre"
+                           value="<%= estaEditando ? datos.artista.nombre : '' %>"
+                           class="form-control" placeholder="nombre"
+                           title="Nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="representante">
+                        Representante
+                    </label>
+                    <input id="representante" type="text" name="representante"
+                           value="<%= estaEditando ? datos.artista.representante : '' %>"
+                           class="form-control" placeholder="representante">
+                </div>
+
+                <div class="form-group">
+                    <label for="integrantes">
+                        Integrantes
+                    </label>
+                    <input id="integrantes" type="number" name="integrantes"
+                           value="<%= estaEditando ? datos.artista.integrantes : '' %>"
+                           class="form-control" placeholder="">
+                </div>
+
+                <div class="form-group">
+                    <label for="nacionalidad">
+                        Nacionalidad
+                    </label>
+                    <input id="nacionalidad" type="text" name="nacionalidad"
+                           value="<%= estaEditando ? datos.artista.nacionalidad : '' %>" class="form-control"
+                           placeholder="">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="precio">
+                        Precio
+                    </label>
+                    <input id="precio" type="number" name="precio" min="0" step=".01"
+                           value="<%= estaEditando ? datos.concierto.horaInicio : '' %>" class="form-control"
+                           placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="concierto">
+                        Concierto
+                    </label>
+                    <select id="concierto" name="conciertoId">
+                        <%datos.conciertos.forEach(concierto => {%>
+                        <option value="<%=concierto.id%>>"><%=concierto.nombre%></option>
+                        <%})%>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">
+            Guardar
+        </button>
+        <button type="reset" class="btn btn-secondary" <%= estaEditando ? "disabled" : "" %> >
+            Limpiar
+        </button>
+    </form>
+</div>
+<%- include('../commons/pie-de-pagina') %>
