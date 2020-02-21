@@ -30,7 +30,7 @@ export class ConciertoCreateDto {
 
   @IsString()
   @IsNotEmpty()
-  area: number;
+  area: string;
 
 
 }

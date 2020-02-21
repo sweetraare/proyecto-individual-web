@@ -27,7 +27,7 @@ export class UsuarioController {
         userId: usuarioValidado.id,
         roles: [usuarioValidado.rol],
       };
-      res.send('ok');
+      res.render('commons/ruta-principal');
     } else {
       res.send('No se encuentra registrado');
     }

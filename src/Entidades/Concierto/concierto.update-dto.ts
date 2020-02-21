@@ -34,5 +34,5 @@ export class ConciertoUpdateDto {
 
   @IsString()
   @IsNotEmpty()
-  area: number;
+  area: string;
 }

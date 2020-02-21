@@ -50,18 +50,17 @@ export class ConciertoEntity {
     type: 'int',
     nullable: false,
     name: 'concierto_hora_fin',
-    unique: true,
   })
   horaFin: number;
 
   @Column({
-    type: 'decimal',
+    type: 'varchar',
     precision: 10,
     scale: 2,
     nullable: false,
     name: 'concierto_area',
   })
-  area: number;
+  area: string;
 
 
   @OneToMany(

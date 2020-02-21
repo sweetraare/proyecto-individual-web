@@ -4,6 +4,7 @@ import { ConciertoService } from './concierto.service';
 import { ConciertoEntity } from './concierto.entity';
 import { ConciertoCreateDto } from './concierto.create-dto';
 import { ConciertoUpdateDto } from './concierto.update-dto';
+import { log } from 'util';
 
 @Controller('concierto')
 export class ConciertoController {
@@ -12,28 +13,77 @@ export class ConciertoController {
   ) {
   }
 
+  @Get('ruta/crear-concierto')
+  async rutaCrearConcierto(
+    @Res() res,
+    @Session() session,
+  ): Promise<void> {
+    session.usuario ? res.render('concierto/ruta-crear-concierto',
+      {
+        datos: {
+          tipoMensaje: 0,
+        },
+      },
+    ) : res.redirect('/');
+  }
+
+  @Get('ruta/editar-concierto/:id')
+  async rutaEditarConcierto(
+    @Res() res,
+    @Param('id') id: string,
+    @Session() session
+  ): Promise<void> {
+    const concierto = await this._conciertoService.buscarUnConciero(+id);
+    session.usuario ? res.render('concierto/ruta-crear-concierto',
+      {
+        datos: {
+          tipoMensaje: 0,
+          concierto,
+
+        },
+      },
+    ) : res.redirect('/');
+  }
+
+  @Get('ruta/mostrar-conciertos')
+  async rutaMostrarConcierto(
+    @Res() res,
+    @Session() session
+  ): Promise<void> {
+    const conciertos = await this._conciertoService.buscarConciertos();
+    session.usuario ? res.render('concierto/ruta-mostrar-concierto',
+      {
+        datos: {
+          conciertos,
+        },
+      },
+    ) : res.redirect('/');
+  }
+
   @Post()
   async ingresarConcierto(
     @Body() concierto: ConciertoEntity,
     @Res() res,
     @Session() session,
   ): Promise<void> {
+    console.log('concierto', concierto);
     if (session) {
       if (session.usuario.roles.includes('Administrador')) {
         const conciertoCreateDto = new ConciertoCreateDto();
         conciertoCreateDto.area = concierto.area;
-        conciertoCreateDto.capacidad = concierto.capacidad;
+        conciertoCreateDto.capacidad = +concierto.capacidad;
         conciertoCreateDto.ciudad = concierto.ciudad;
-        conciertoCreateDto.horaFin = concierto.horaFin;
-        conciertoCreateDto.horaInicio = concierto.horaInicio;
+        conciertoCreateDto.horaFin = +concierto.horaFin;
+        conciertoCreateDto.horaInicio = +concierto.horaInicio;
         conciertoCreateDto.tipoMusica = concierto.tipoMusica;
+        conciertoCreateDto.nombre = concierto.nombre;
         const errores = await validate(conciertoCreateDto);
         if (errores.length > 0) {
           throw new BadRequestException(errores);
         } else {
           try {
             await this._conciertoService.crearConcierto(concierto);
-            res.send('OK');
+            res.redirect('concierto/ruta/mostrar-conciertos');
           } catch (e) {
             throw new BadRequestException(e);
           }

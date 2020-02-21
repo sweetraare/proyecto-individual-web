@@ -1,0 +1,38 @@
+<%- include('../commons/cabecera') %>
+<h2>Mostrar conciertos</h2>
+<table>
+    <thead>
+    <tr>
+        <th>nombre</th>
+        <th>capacidad</th>
+        <th>tipo de musica</th>
+        <th>ciudad</th>
+        <th>hora inicio</th>
+        <th>hora fin</th>
+        <th>area</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% datos.conciertos.forEach(concierto => { %>
+    <tr>
+        <td><%= concierto.nombre %></td>
+        <td><%= concierto.capacidad %></td>
+        <td><%= concierto.tipoMusica %></td>
+        <td><%= concierto.ciudad %></td>
+        <td><%= concierto.horaInicio %></td>
+        <td><%= concierto.horaFin %></td>
+        <td><%= concierto.area %></td>
+        <td>
+            <a href="/concierto/ruta/editar-concierto/<%= concierto.id %>">
+                <button type="button"
+                        class="btn btn-primary">
+                    Editar
+                </button>
+            </a>
+        </td>
+    </tr>
+    <% }) %>
+    </tbody>
+</table>
+<%- include('../commons/pie-de-pagina') %>

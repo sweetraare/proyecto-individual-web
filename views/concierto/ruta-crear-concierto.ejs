@@ -1,0 +1,87 @@
+<%- include('../commons/cabecera') %>
+<% const estaEditando = !!datos.concierto; %>
+<h1>Crear un concierto</h1>
+<div class="container">
+    <% if(datos.tipoMensaje != 0){ %>
+        <div class="alert alert-<%= datos.tipoMensaje == 1 ? 'success' : 'danger' %> " role="alert">
+            <%= datos.mensaje %>
+        </div>
+    <% } %>
+    <h1><%= estaEditando ? 'Editar Concierto' : 'Crear Concierto' %></h1>
+    <form action=/concierto<%= estaEditando ? '/' + datos.concierto.id : '' %> method="POST">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="nombre">
+                        Nombre
+                    </label>
+                    <input id="nombre" type="text" name="nombre"
+                           value="<%= estaEditando ? datos.concierto.nombre : '' %>"
+                           class="form-control" placeholder="nombre"
+                           title="Nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="capacidad">
+                        Capacidad
+                    </label>
+                    <input id="capacidad" type="number" name="capacidad"
+                           value="<%= estaEditando ? datos.concierto.capacidad : '' %>"
+                           class="form-control" placeholder="capacidad">
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoMusica">
+                        Tipo Musica
+                    </label>
+                    <input id="tipoMusica" type="text" name="tipoMusica"
+                           value="<%= estaEditando ? datos.concierto.tipoMusica : '' %>"
+                           class="form-control" placeholder="">
+                </div>
+
+                <div class="form-group">
+                    <label for="ciudad">
+                        Ciudad
+                    </label>
+                    <input id="ciudad" type="text" name="ciudad"
+                           value="<%= estaEditando ? datos.concierto.ciudad : '' %>" class="form-control"
+                           placeholder="">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label for="horaInicio">
+                        Hora Inicio
+                    </label>
+                    <input id="horaInicio" type="number" name="horaInicio"
+                           value="<%= estaEditando ? datos.concierto.horaInicio : '' %>" class="form-control"
+                           placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="horaFin">
+                        Hora Fin
+                    </label>
+                    <input id="horaFin" type="number" name="horaFin"
+                           value="<%= estaEditando ? datos.concierto.horaFin : '' %>" class="form-control"
+                           placeholder="">
+                </div>
+                <div class="form-group">
+                    <label for="area">
+                        Area
+                    </label>
+                    <input id="area" type="text" name="area"
+                           value="<%= estaEditando ? datos.concierto.area : '' %>" class="form-control"
+                           placeholder="">
+                </div>
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">
+            Guardar
+        </button>
+        <button type="reset" class="btn btn-secondary" <%= estaEditando ? "disabled" : "" %> >
+            Limpiar
+        </button>
+    </form>
+</div>
+<%- include('../commons/pie-de-pagina') %>
