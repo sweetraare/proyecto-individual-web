@@ -15,7 +15,7 @@ export class ArtistaController {
   }
 
   @Get('ruta/crear-artista')
-  async rutaCrearConcierto(
+  async rutaCrearArtista(
     @Res() res,
     @Session() session,
   ): Promise<void> {
@@ -25,6 +25,23 @@ export class ArtistaController {
         datos: {
           tipoMensaje: 0,
           conciertos
+        },
+      },
+    ) : res.redirect('/');
+  }
+
+  @Get('ruta/mostrar-artista')
+  async rutaMostrarArtista(
+    @Res() res,
+    @Session() session,
+  ): Promise<void> {
+    const artistas = await this._artistaService.buscarArtistas();
+    console.log('artistas', artistas )
+    session.usuario ? res.render('artista/ruta-mostrar-artista',
+      {
+        datos: {
+          tipoMensaje: 0,
+          artistas
         },
       },
     ) : res.redirect('/');
@@ -51,7 +68,7 @@ export class ArtistaController {
         } else {
           try {
             await this._artistaService.crearArtista(artista);
-            res.send('OK');
+            res.redirect('/artista/ruta/mostrar-artista');
           } catch (e) {
             throw new BadRequestException(e);
           }
