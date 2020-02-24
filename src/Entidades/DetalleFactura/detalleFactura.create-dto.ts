@@ -13,4 +13,8 @@ export class DetalleFacturaCreateDto {
   @IsNotEmpty()
   @IsNumber()
   subtotal: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  factura: number;
 }

@@ -1,0 +1,58 @@
+<%- include('../commons/cabecera') %>
+<div class="container">
+    <h3>Facturas</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Direccion</th>
+            <th scope="col">Finalizada</th>
+            <th scope="col">Total</th>
+            <th scope="col">Detalles</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <% if(datos.facturas) { %>
+
+        <% } %>
+        <% datos.facturas.forEach(factura => { %>
+            <tr>
+                <td><%= factura.id %></td>
+                <td><%= factura.fecha %></td>
+                <td><%= factura.cliente %></td>
+                <td><%= factura.direccion %></td>
+                <td><%= factura.finalizada %></td>
+                <td><%= factura.total %></td>
+                <td>
+
+                    <% if(factura.detalles) { %>
+
+                        <ul>
+                            <% factura.detalles.forEach(detalle => { %>
+                                <li><%= detalle.artista.nombre %> | <%= detalle.precio %> | <%= detalle.cantidad %>
+                                    | <%= detalle.subtotal %></li>
+                            <% }) %>
+                        </ul>
+                    <% } else { %>
+                        No existen registros
+                    <% } %>
+
+                </td>
+                <td>
+                    <form action="/factura/ruta/editar/<%= factura.id %>" method="get">
+                        <button type="submit" class="btn btn-outline-info" <%= factura.finalizada && "disabled" %>>
+                            Editar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+
+        </tbody>
+    </table>
+</div>
+<%- include('../commons/pie-de-pagina') %>

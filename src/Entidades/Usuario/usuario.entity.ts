@@ -34,7 +34,7 @@ export class UsuarioEntity {
 
   @OneToMany(
     type => FacturaEntity,
-    detalleFactura => detalleFactura.usuario,
+    factura => factura.usuario,
   )
   facturas: FacturaEntity[];
 

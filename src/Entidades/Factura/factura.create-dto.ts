@@ -7,10 +7,11 @@ export class FacturaCreateDto {
   fecha: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  total: number;
+  @IsString()
+  direccion: string;
 
   @IsNotEmpty()
   @IsString()
-  direccion: string;
+  cliente: string;
+
 }

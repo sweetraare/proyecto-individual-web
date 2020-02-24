@@ -19,11 +19,27 @@ export class FacturaEntity {
   fecha: string;
 
   @Column({
+    type: 'varchar',
+    nullable: false,
+    name: 'factura_cliente',
+  })
+  cliente: string;
+
+  @Column({
+    type: 'boolean',
+    nullable: false,
+    name: 'factura_finalizada',
+    default: false
+  })
+  finalizada: boolean;
+
+  @Column({
     type: 'decimal',
     precision: 10,
     scale: 2,
     nullable: false,
     name: 'factura_total',
+    default: 0
   })
   total: number;
 

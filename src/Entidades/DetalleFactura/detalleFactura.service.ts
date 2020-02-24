@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { DetalleFacturaEntity } from './detalleFactura.entity';
+import { log } from 'util';
 
 @Injectable()
 export class DetalleFacturaService {
@@ -12,6 +13,7 @@ export class DetalleFacturaService {
   }
 
   crearDetalleFactura(detalleFactura: DetalleFacturaEntity) {
+    console.log('en el servicio', detalleFactura)
     return this._repositorioFactura.save(detalleFactura);
   }
 
@@ -29,8 +31,13 @@ export class DetalleFacturaService {
         skip: skip,
         take: take,
         order: order,
-        relations: ['pareja'],
+        relations: ['artista'],
       },
     );
   }
+
+  borrarDetalle(id: number): Promise<DeleteResult>{
+    return this._repositorioFactura.delete(id);
+  }
+
 }

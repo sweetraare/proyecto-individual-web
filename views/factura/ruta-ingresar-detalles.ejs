@@ -1,0 +1,119 @@
+<% const factura = datos.factura %>
+<%- include('../commons/cabecera') %>
+<div class="container">
+    <h1>Crear una factura</h1>
+
+    <form action=/factura method="POST">
+        <div class="form-group">
+            <label for="fecha">
+                Fecha
+            </label>
+            <input id="fecha" type="date" name="fecha"
+                   class="form-control" placeholder="fecha"
+                   value="<%= factura.fecha %>" readonly
+                   title="Fecha">
+        </div>
+        <div class="form-group">
+            <label for="cliente">
+                Cliente
+            </label>
+            <input id="cliente" type="text" name="cliente"
+                   class="form-control" placeholder="nombre del cliente"
+                   value="<%= factura.cliente %>" readonly
+                   title="cliente">
+        </div>
+        <div class="form-group">
+            <label for="direccion">
+                Direccion
+            </label>
+            <input id="direccion" type="text" name="direccion"
+                   class="form-control" placeholder="direccion del cliente"
+                   value="<%= factura.direccion %>" readonly
+                   title="cliente">
+        </div>
+        <div class="form-group">
+            <label for="total">
+                Total
+            </label>
+            <input id="total" type="text" name="total"
+                   class="form-control" placeholder="total"
+                   value="<%= factura.total %>" readonly
+                   title="total">
+        </div>
+    </form>
+
+</div>
+
+<div class="container">
+    <h1>Ingresar nuevo detalle</h1>
+
+    <form action=/detallefactura method="POST">
+        <div class="form-group">
+            <label for="cantidad">
+                Cantidad
+            </label>
+            <input id="cantidad" type="number" name="cantidad"
+                   class="form-control" placeholder="cantidad"
+                   title="cantidad">
+        </div>
+        <div class="form-group">
+            <input id="factura" type="number" name="factura"
+                   value="<%= factura.id %>"
+                   hidden
+                   title="factura">
+        </div>
+        <div class="form-group">
+            <label for="artista">
+                Artista
+            </label>
+            <select id="artista" name="artista">
+                <% datos.artistas.forEach(artista => { %>
+                <option value="<%= artista.id %>"><%= artista.nombre %> | <%= artista.precio %></option>
+                <% }) %>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-info">
+            Agregar
+        </button>
+    </form>
+
+</div>
+
+<% if (datos.detalles) { %>
+<div class="container">
+    <h3>Detalles Ingresados:</h3>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Artista</th>
+            <th scope="col">precio</th>
+            <th scope="col">cantidad</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% datos.detalles.forEach(detalle => { %>
+        <tr>
+            <td>#</td>
+            <td><%= detalle.artista.nombre %></td>
+            <td><%= detalle.precio %></td>
+            <td><%= detalle.cantidad %></td>
+            <td><%= detalle.subtotal %></td>
+            <td>
+                <form action="/detallefactura/eliminar/<%= detalle.id %>/<%=factura.id%>" method="post">
+                    <button class="btn btn-outline-danger">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <% }) %>
+        </tbody>
+    </table>
+    <form action="/detallefactura/finalizar/<%= factura.id %>" method="post">
+        <button class="btn btn-outline-success" type="submit">Finalizar</button>
+    </form>
+</div>
+
+<% } %>
+<%- include('../commons/pie-de-pagina') %>

@@ -39,7 +39,7 @@ export class DetalleFacturaEntity {
     type => FacturaEntity,
     factura => factura.detalles,
   )
-  factura: FacturaEntity | number | any;
+  factura: FacturaEntity | number;
 
   @ManyToOne(
     type => ArtistaEntity,

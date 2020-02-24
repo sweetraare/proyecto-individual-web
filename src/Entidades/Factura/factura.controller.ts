@@ -3,13 +3,96 @@ import { validate } from 'class-validator';
 import { FacturaService } from './factura.service';
 import { FacturaEntity } from './factura.entity';
 import { FacturaCreateDto } from './factura.create-dto';
+import { ArtistaService } from '../Artista/artista.service';
 
 @Controller('factura')
 export class FacturaController {
   constructor(
     private readonly _facturaService: FacturaService,
+    private readonly _artistaService: ArtistaService,
   ) {
   }
+
+  @Get('ruta/crear-factura')
+  async rutaCrearFactura(
+    @Res() res,
+    @Session() session,
+  ): Promise<void> {
+    session.usuario ? res.render('factura/ruta-crear-factura',
+      {
+        datos: {
+          tipoMensaje: 0,
+        },
+      },
+    ) : res.redirect('/');
+  }
+
+  @Get('ruta/ingresar-detalles/:id')
+  async rutaCrearDetalles(
+    @Res() res,
+    @Session() session,
+    @Param('id') id: number,
+  ): Promise<void> {
+    const factura = await this._facturaService.buscarUnaFactura(+id);
+    const artistas = await this._artistaService.buscarArtistas();
+    session.usuario ? res.render('factura/ruta-ingresar-detalles',
+      {
+        datos: {
+          tipoMensaje: 0,
+          factura,
+          artistas,
+        },
+      },
+    ) : res.redirect('/');
+  }
+
+  @Get('ruta/mostrar-facturas')
+  async rutaMostrarFacturas(
+    @Res() res,
+    @Session() session,
+  ): Promise<void> {
+    const facturas = await this._facturaService.buscarFacturas();
+    session.usuario ? res.render('factura/ruta-mostrar-facturas',
+      {
+        datos: {
+          tipoMensaje: 0,
+          facturas,
+        },
+      },
+    ) : res.redirect('/');
+  }
+
+  @Get('ruta/editar/:id')
+  async editarFacturas(
+    @Res() res,
+    @Session() session,
+    @Param('id') id: number,
+  ): Promise<void> {
+    if (session.usuario) {
+      if (session.usuario.roles.includes('Administrador')) {
+        const factura = await this._facturaService.buscarUnaFactura(+id);
+        const artistas = await this._artistaService.buscarArtistas();
+
+        res.render('factura/ruta-ingresar-detalles',
+          {
+            datos: {
+              tipoMensaje: 0,
+              factura,
+              artistas,
+              detalles: factura.detalles,
+            },
+          },
+        );
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/');
+    }
+
+
+  }
+
 
   @Post()
   async ingresarFactura(
@@ -17,22 +100,22 @@ export class FacturaController {
     @Res() res,
     @Session() session,
   ): Promise<void> {
-    if (session) {
-      console.log(session);
-      if (session.usuario.roles.includes('Usuario')) {
+    if (session.usuario) {
+      if (session.usuario.roles.includes('Administrador')) {
         const facturaCreateDto = new FacturaCreateDto();
         facturaCreateDto.fecha = factura.fecha;
-        facturaCreateDto.total = factura.total;
         facturaCreateDto.direccion = factura.direccion;
+        facturaCreateDto.cliente = factura.cliente;
+        factura.usuario = session.usuario.userId;
         const errores = await validate(facturaCreateDto);
         if (errores.length > 0) {
           throw new BadRequestException(errores);
         } else {
           try {
-            await this._facturaService.crearFactura(factura);
-            res.send('OK');
+            const facturaIngresada = await this._facturaService.crearFactura(factura);
+            res.redirect(`/factura/ruta/ingresar-detalles/${facturaIngresada.id}`);
           } catch (e) {
-            throw new BadRequestException('No se puede ingresar la factura');
+            throw new BadRequestException(e);
           }
         }
       } else {

@@ -14,7 +14,7 @@ export class FacturaService {
   buscarUnaFactura(id: number): Promise<FacturaEntity | undefined> {
     return this._repositorioFactura.findOne(id,
       {
-        relations: ['detalles', 'detalles.pareja'],
+        relations: ['detalles', 'detalles.artista'],
       },
     );
   }
@@ -46,6 +46,7 @@ export class FacturaService {
         skip: skip,
         take: take,
         order: order,
+        relations: ['detalles', 'detalles.artista'],
       },
     );
   }

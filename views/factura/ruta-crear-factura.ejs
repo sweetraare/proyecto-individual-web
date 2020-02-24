@@ -1,0 +1,37 @@
+<%- include('../commons/cabecera') %>
+<% const estaEditando = !!datos.concierto; %>
+<h1>Crear una factura</h1>
+<div class="container">
+
+    <form action=/factura method="POST">
+        <div class="form-group">
+            <label for="fecha">
+                Fecha
+            </label>
+            <input id="fecha" type="date" name="fecha"
+                   class="form-control" placeholder="fecha"
+                   title="Fecha">
+        </div>
+        <div class="form-group">
+            <label for="cliente">
+                Cliente
+            </label>
+            <input id="cliente" type="text" name="cliente"
+                   class="form-control" placeholder="nombre del cliente"
+                   title="cliente">
+        </div>
+        <div class="form-group">
+            <label for="direccion">
+                Direccion
+            </label>
+            <input id="direccion" type="text" name="direccion"
+                   class="form-control" placeholder="direccion del cliente"
+                   title="cliente">
+        </div>
+        <button type="submit" class="btn btn-success">
+            Continuar
+        </button>
+    </form>
+
+</div>
+<%- include('../commons/pie-de-pagina') %>
